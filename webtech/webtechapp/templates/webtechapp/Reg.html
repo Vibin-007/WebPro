@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Event Registration</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ece9e6, #ffffff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 480px) {
+      form {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<form action="{% url 'Reg' %}" method="POST">
+    {% csrf_token %}
+    <h2>Event Registration</h2>
+
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" placeholder="Enter your name" required />
+
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" placeholder="Enter your email" required />
+
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" placeholder="Enter your phone number" required />
+
+    <label for="category">Select Category:</label>
+    <select id="category" required>
+      <option value="">--Choose Category--</option>
+      <option value="Technical">Technical</option>
+      <option value="Cultural">Cultural</option>
+      <option value="Workshop">Workshop</option>
+      <option value="Sports">Sports</option>
+      <option value="Pro-Wshow">Pro-Wshow</option>
+      <option value="Start-Up">Start-Up</option>
+    </select>
+
+    <label for="event">Select Event:</label>
+    <select id="event" required>
+      <option value="">--Choose Event--</option>
+    </select>
+
+    <label for="payment">Payment Method:</label>
+    <select id="payment" required>
+      <option value="">--Select Payment Method--</option>
+      <option value="UPI">UPI</option>
+      <option value="Card">Credit/Debit Card</option>
+      <option value="NetBanking">Net Banking</option>
+    </select>
+
+    <p id="price" style="font-weight:bold;"></p>
+
+    <button type="submit">Submit Registration</button>
+  </form>
+
+  <script>
+    const eventData = {
+      "Technical": [
+        { name: "Tech Quiz", price: 100 },
+        { name: "Code Sprint", price: 200 },
+        { name: "UX Design", price: 150 },
+        { name: "Python Hackathon", price: 250 },
+        { name: "AI Challenge", price: 300 },
+        { name: "Cyber Security", price: 200 },
+        { name: "Debugging", price: 100 },
+        { name: "MR Tech Fest", price: 350 },
+        { name: "Hardware Hack", price: 400 },
+        { name: "App Dev", price: 180 },
+        { name: "Web Dev", price: 220 },
+        { name: "Data Science", price: 300 }
+      ],
+      "Cultural": [
+        { name: "Dance Show", price: 150 },
+        { name: "Music Night", price: 200 },
+        { name: "Art Gallery", price: 100 },
+        { name: "Theater Play", price: 180 },
+        { name: "Fashion Show", price: 220 },
+        { name: "Poetry Slam", price: 90 },
+        { name: "Mime Act", price: 120 },
+        { name: "Rangoli", price: 80 },
+        { name: "DJ Night", price: 250 },
+        { name: "Photography", price: 110 },
+        { name: "Singing", price: 130 },
+        { name: "Dramatics", price: 160 }
+      ],
+      "Workshop": [
+        { name: "Science Workshop", price: 200 },
+        { name: "Math Challenge", price: 150 },
+        { name: "Chemistry Demo", price: 180 },
+        { name: "Bio Lab Tour", price: 170 },
+        { name: "Physics Quiz", price: 160 },
+        { name: "AI Seminar", price: 300 },
+        { name: "Robotics Meet", price: 350 },
+        { name: "Science Fair", price: 250 },
+        { name: "Geology Field Trip", price: 220 },
+        { name: "Astro Night", price: 200 },
+        { name: "Nano Tech Talk", price: 280 },
+        { name: "Lab Open Day", price: 140 }
+      ],
+      "Sports": [
+        { name: "Cricket Match", price: 250 },
+        { name: "Football League", price: 260 },
+        { name: "Basketball", price: 200 },
+        { name: "Table Tennis", price: 150 },
+        { name: "Badminton", price: 150 },
+        { name: "Athletics", price: 180 },
+        { name: "Relay Race", price: 160 },
+        { name: "Tug of War", price: 140 },
+        { name: "Volleyball", price: 170 },
+        { name: "Swimming", price: 200 },
+        { name: "Gymnastics", price: 220 },
+        { name: "Boxing", price: 230 }
+      ],
+      "Pro-Wshow": [
+        { name: "Fashion Show", price: 300 },
+        { name: "Dance Performance", price: 250 },
+        { name: "Music Band", price: 280 },
+        { name: "Stand-up Comedy", price: 200 },
+        { name: "Magic Show", price: 220 },
+        { name: "Light & Sound Show", price: 250 },
+        { name: "Fire Dance", price: 300 },
+        { name: "Beat Boxing", price: 210 },
+        { name: "Drama Play", price: 240 },
+        { name: "Band Night", price: 290 },
+        { name: "Solo Performance", price: 180 },
+        { name: "DJ Set", price: 260 }
+      ],
+      "Start-Up": [
+        { name: "Startup Pitch", price: 200 },
+        { name: "Innovation Talks", price: 180 },
+        { name: "Product Launch", price: 220 },
+        { name: "Business Plan", price: 200 },
+        { name: "Investor Connect", price: 250 },
+        { name: "Pitch Arena", price: 230 },
+        { name: "Ideathon", price: 210 },
+        { name: "Networking Event", price: 190 },
+        { name: "Startup Expo", price: 240 },
+        { name: "Incubation Info", price: 170 },
+        { name: "Founders Talks", price: 200 },
+        { name: "Mentor Session", price: 160 }
+      ]
+    };
+
+    const categorySelect = document.getElementById('category');
+    const eventSelect = document.getElementById('event');
+    const priceDisplay = document.getElementById('price');
+    const form = document.querySelector('form');
+
+    categorySelect.addEventListener('change', function () {
+      const selectedCategory = this.value;
+      eventSelect.innerHTML = '<option value="">--Choose Event--</option>';
+      priceDisplay.textContent = '';
+
+      if (eventData[selectedCategory]) {
+        eventData[selectedCategory].forEach(event => {
+          const option = document.createElement('option');
+          option.value = event.name;
+          option.textContent = event.name;
+          eventSelect.appendChild(option);
+        });
+      }
+    });
+
+    eventSelect.addEventListener('change', function () {
+      const selectedCategory = categorySelect.value;
+      const selectedEvent = this.value;
+
+      const event = eventData[selectedCategory]?.find(e => e.name === selectedEvent);
+      if (event) {
+        priceDisplay.textContent = `Price: ₹${event.price}`;
+        priceDisplay.dataset.price = event.price;
+      } else {
+        priceDisplay.textContent = '';
+        delete priceDisplay.dataset.price;
+      }
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const price = priceDisplay.dataset.price || 0;
+      alert(`Registration submitted!\nPlease proceed to pay ₹${price}.`);
+    });
+  </script>
+</body>
+</html>

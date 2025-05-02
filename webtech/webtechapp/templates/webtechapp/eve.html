@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Categories</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .titles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      text-align: center;
+    }
+
+    .title {
+      font-size: 1.7rem;
+      width: 300px;
+      padding: 40px;
+      background: white;
+      border: 2px solid #333;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .title:hover {
+      background-color: #007BFF;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: white;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      color: #000;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .overlay.active {
+      display: flex;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .overlay .content {
+      text-align: center;
+      padding: 40px 20px;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .overlay h2 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 25px;
+      right: 30px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    /* Updated Image Card Styles - Smaller */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 50px;
+      margin-top: 30px;
+      justify-items: center;
+      margin-left: -22%;
+    }
+
+    .card {
+      padding: 20px;
+      transition: transform 0.3s ease;
+      text-align: center;
+      background: transparent;
+    }
+
+    .card:hover {
+      transform: scale(1.07);
+    }
+
+    .card img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #007BFF;
+      margin-bottom: 10px;
+    }
+
+    .card figcaption p {
+      margin: 6px 0;
+      font-size: 1.4rem;
+    }
+
+    .card .amt {
+      text-align: center;
+      font-weight: bold;
+      color: green;
+      margin-top: 10px;
+      font-size: 1.3rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .titles {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .titles {
+        grid-template-columns: 1fr;
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .card img {
+        width: 150px;
+        height: 150px;
+      }
+
+      .card figcaption p {
+        font-size: 1.2rem;
+      }
+
+      .card .amt {
+        font-size: 1.1rem;
+      }
+    }
+      .btn{
+        width:200px;
+        height:50px;
+       margin-left:45%;
+       border-radius:50px;
+       border:3px solid black;
+       margin-left:45%;
+
+      }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="titles">
+    <div class="title" data-title="Technical">Technical</div>
+    <div class="title" data-title="Cultural">Cultural</div>
+    <div class="title" data-title="Workshop">Workshop</div>
+    <div class="title" data-title="Sports">Sports</div>
+    <div class="title" data-title="Pro-Wshow">Pro-Wshow</div>
+    <div class="title" data-title="Start-Up">Start-Up</div>
+  </div>
+
+</div>
+<a href="Reg">
+    <button class="btn">Register Now</button>
+</a>
+
+
+<!-- Overlay -->
+<div class="overlay" id="overlay">
+  <button class="close-btn">Close</button>
+  <div class="content">
+    <h2 id="overlayTitle">Category</h2>
+    <!-- Cards will be dynamically inserted here -->
+    <div class="cards-container" id="cardContainer"></div>
+  </div>
+</div>
+
+
+<script>
+  const titles = document.querySelectorAll('.title');
+  const overlay = document.getElementById('overlay');
+  const overlayTitle = document.getElementById('overlayTitle');
+  const cardContainer = document.getElementById('cardContainer');
+  const closeBtn = document.querySelector('.close-btn');
+
+  // Sample event data for each category
+  const eventData = {
+    "Technical": [
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Tech Quiz", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Code Sprint", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "UX Design", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Python Hackathon", price: "Rs:250" },
+      { img: "https://i.ibb.co/PZmWM2mH/hack.jpg", name: "AI Challenge", price: "Rs:250" },
+      { img: "https://i.ibb.co/5g5zYXFk/cyber.jpg", name: "Cyber Security", price: "Rs:250" },
+      { img: "https://i.ibb.co/VcDBvkwP/brain.jpeg", name: "Debugging", price: "Rs:250" },
+      { img: "https://i.ibb.co/p6bPWqb8/mr.jpg", name: "MR Tech Fest", price: "Rs:250" },
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Hardware Hack", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "App Dev", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Web Dev", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Data Science", price: "Rs:250" }
+    ],
+    "Cultural": [
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Dance Show", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Music Night", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Art Gallery", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Theater Play", price: "Rs:250" },
+      { img: "https://i.ibb.co/PZmWM2mH/hack.jpg", name: "Fashion Show", price: "Rs:250" },
+      { img: "https://i.ibb.co/5g5zYXFk/cyber.jpg", name: "Poetry Slam", price: "Rs:250" },
+      { img: "https://i.ibb.co/VcDBvkwP/brain.jpeg", name: "Mime Act", price: "Rs:250" },
+      { img: "https://i.ibb.co/p6bPWqb8/mr.jpg", name: "Rangoli", price: "Rs:250" },
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "DJ Night", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Photography", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Singing", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Dramatics", price: "Rs:250" }
+    ],
+    "Workshop": [
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Science Workshop", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Math Challenge", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Chemistry Demo", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Bio Lab Tour", price: "Rs:250" },
+      { img: "https://i.ibb.co/PZmWM2mH/hack.jpg", name: "Physics Quiz", price: "Rs:250" },
+      { img: "https://i.ibb.co/5g5zYXFk/cyber.jpg", name: "AI Seminar", price: "Rs:250" },
+      { img: "https://i.ibb.co/VcDBvkwP/brain.jpeg", name: "Robotics Meet", price: "Rs:250" },
+      { img: "https://i.ibb.co/p6bPWqb8/mr.jpg", name: "Science Fair", price: "Rs:250" },
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Geology Field Trip", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Astro Night", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Nano Tech Talk", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Lab Open Day", price: "Rs:250" }
+    ],
+    "Sports": [
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Cricket Match", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Football League", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Basketball", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Table Tennis", price: "Rs:250" },
+      { img: "https://i.ibb.co/PZmWM2mH/hack.jpg", name: "Badminton", price: "Rs:250" },
+      { img: "https://i.ibb.co/5g5zYXFk/cyber.jpg", name: "Athletics", price: "Rs:250" },
+      { img: "https://i.ibb.co/VcDBvkwP/brain.jpeg", name: "Relay Race", price: "Rs:250" },
+      { img: "https://i.ibb.co/p6bPWqb8/mr.jpg", name: "Tug of War", price: "Rs:250" },
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Volleyball", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Swimming", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Gymnastics", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Boxing", price: "Rs:250" }
+    ],
+    "Pro-Wshow": [
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Fashion Show", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Dance Performance", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Music Band", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Stand-up Comedy", price: "Rs:250" },
+      { img: "https://i.ibb.co/PZmWM2mH/hack.jpg", name: "Magic Show", price: "Rs:250" },
+      { img: "https://i.ibb.co/5g5zYXFk/cyber.jpg", name: "Light & Sound Show", price: "Rs:250" },
+      { img: "https://i.ibb.co/VcDBvkwP/brain.jpeg", name: "Fire Dance", price: "Rs:250" },
+      { img: "https://i.ibb.co/p6bPWqb8/mr.jpg", name: "Beat Boxing", price: "Rs:250" },
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Drama Play", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Band Night", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Solo Performance", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "DJ Set", price: "Rs:250" }
+    ],
+    "Start-Up": [
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Startup Pitch", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Innovation Talks", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Product Launch", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Business Plan", price: "Rs:250" },
+      { img: "https://i.ibb.co/PZmWM2mH/hack.jpg", name: "Investor Connect", price: "Rs:250" },
+      { img: "https://i.ibb.co/5g5zYXFk/cyber.jpg", name: "Pitch Arena", price: "Rs:250" },
+      { img: "https://i.ibb.co/VcDBvkwP/brain.jpeg", name: "Ideathon", price: "Rs:250" },
+      { img: "https://i.ibb.co/p6bPWqb8/mr.jpg", name: "Networking Event", price: "Rs:250" },
+      { img: "https://i.ibb.co/RFt8Zvb/quzi1.webp", name: "Startup Expo", price: "Rs:250" },
+      { img: "https://i.ibb.co/G3805KSV/poster.png", name: "Incubation Info", price: "Rs:250" },
+      { img: "https://i.ibb.co/N6njCN9N/ux.jpg", name: "Founders Talks", price: "Rs:250" },
+      { img: "https://i.ibb.co/SwSQX88k/python.jpg", name: "Mentor Session", price: "Rs:250" }
+    ]
+  };
+
+  function generateCards(data) {
+    cardContainer.innerHTML = ""; // Clear previous cards
+
+    data.forEach(event => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <img src="${event.img}" alt="${event.name}">
+        <figcaption>
+          <p><strong>${event.name}</strong></p>
+        </figcaption>
+        <div class="amt">${event.price}</div>
+      `;
+
+      cardContainer.appendChild(card);
+    });
+  }
+
+  titles.forEach(title => {
+    title.addEventListener('click', () => {
+      const titleText = title.getAttribute('data-title');
+      overlayTitle.textContent = titleText;
+
+      if (eventData[titleText]) {
+        generateCards(eventData[titleText]);
+      } else {
+        cardContainer.innerHTML = "<p>No events available.</p>";
+      }
+
+      overlay.classList.add('active');
+    });
+  });
+
+  closeBtn.addEventListener('click', () => {
+    overlay.classList.remove('active');
+  });
+</script>
+
+</body>
+</html>
