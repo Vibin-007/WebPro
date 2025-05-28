@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'webtech.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'webtech',          # your database name
+        'NAME': 'project',          # your database name
         'USER': 'postgres',        # your DB username
         'PASSWORD': 'Vibin@007',  # the password you set
         'HOST': 'localhost',
