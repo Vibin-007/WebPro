@@ -190,6 +190,9 @@
         color: #000000;
         transition: all 0.5s ease;
       }
+    .hidden{
+    display:none;
+    }
   </style>
 </head>
 <body>
@@ -207,7 +210,7 @@
 </div>
 <!-- {% url 'Reg' %} -->
 <a href="{% url 'Reg' %}">
-    <button class="btn">Register Now</button>
+    <button class="btn hidden" id="regbtn">Register Now</button>
 </a>
 
 
@@ -354,6 +357,14 @@
   closeBtn.addEventListener('click', () => {
     overlay.classList.remove('active');
   });
+  window.onload = function () {
+      const role = localStorage.getItem("role");
+
+      if (role === "student") {
+        // Admin should not see the button
+        document.getElementById("regbtn").classList.remove("hidden");
+      }
+    };
 </script>
 
 </body>

@@ -15,3 +15,11 @@ class EventRegistration(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.event_name}"
+
+
+class Student(models.Model):
+    name = models.CharField(max_length=150)
+    password = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
